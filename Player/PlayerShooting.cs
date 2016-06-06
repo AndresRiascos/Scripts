@@ -1,13 +1,11 @@
 ﻿using UnityEngine;
-using UnitySampleAssets.CrossPlatformInput;
 using UnityEngine;
-using UnitySampleAssets.CrossPlatformInput;
 
 namespace CompleteProject
 {
 	public class PlayerShooting : MonoBehaviour
 	{
-		public int damagePerShot = 20;                  // The damage inflicted by each bullet.
+		public int damagePerShot = 100;                  // The damage inflicted by each bullet.
 		public float timeBetweenBullets = 0.15f;        // el tiempo entre cada disparo
 		public float range = 100f;                      // The distance the gun can fire.
 
@@ -114,6 +112,17 @@ namespace CompleteProject
 				// Try and find an EnemyHealth script on the gameobject hit.
 				EnemyHealth enemyHealth = shootHit.collider.GetComponent <EnemyHealth> ();
 
+				//PARA GENERAR DAÑO ALEATORIO
+				// lo pongo en ese rango para poder que sea positvo el numero de la funcion coseno
+				float funcionCos = Mathf.Cos (Random.Range(-Mathf.PI/2, Mathf.PI/2));             
+				int danoF = (int)(funcionCos * 100); 
+				if (danoF <= 30) {
+					damagePerShot = danoF;//se asigna el valor al la variable daño
+				} else {
+					damagePerShot = 30;
+				}
+				//fin
+
 				// If the EnemyHealth component exist...
 				if(enemyHealth != null)
 				{
@@ -121,8 +130,7 @@ namespace CompleteProject
 					enemyHealth.TakeDamage (damagePerShot, shootHit.point);
 				}
 
-				// Set the second position of the line renderer to the point the raycast hit.
-				//gunLine.SetPosition (1, shootHit.point);
+				// Set the second position of the line renderer to the point the raycast hit.			
 				Vector3 dir = (shootHit.point-transform.position).normalized;
 				Vector3[] points = new Vector3[lengthOfLineRenderer];// se crea un arreglo de vectores de 3 dimensiones, donde se guardara cada vertice de la linea
 				float t = Time.time;

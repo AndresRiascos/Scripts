@@ -48,20 +48,26 @@ namespace CompleteProject
 					Camera2.enabled = false;
 				}
 			}if (( Input.GetKeyDown(KeyCode.KeypadPlus)) && (MainCamera.enabled == true)){
-				Debug.Log (MainCamera.transform.localEulerAngles.x);
-				Debug.Log (MainCamera.transform.localPosition);
+				Debug.Log ("Angulo: " + MainCamera.transform.localEulerAngles.x);
+				Debug.Log ("Posición que debería tomar: " + MainCamera.transform.localPosition);
 				int comparar = (int)MainCamera.transform.localEulerAngles.x;
 				if(comparar == 30){
 					var rotation = Quaternion.Euler(45, 0, 0);
-					Vector3 temp = MainCamera.transform.localPosition;
+					Vector3 temp = MainCamera.transform.position;
 					temp.z = -14f;
-					MainCamera.transform.localPosition = temp;
+					MainCamera.transform.position = temp;
 					MainCamera.transform.rotation = rotation;
 				}if(comparar == 45){
 					var rotation = Quaternion.Euler(60, 0, 0);
 					MainCamera.transform.rotation = rotation;
 				}if(comparar == 60){
 					var rotation = Quaternion.Euler(75, 0, 0);
+					Vector3 targetCamPos = target.position + offset;
+					Vector3 temp = transform.position;
+					temp.z = -8f;
+					transform.position = temp;
+					// Smoothly interpolate between the camera's current position and it's target position.
+					transform.position = Vector3.Lerp (transform.position, targetCamPos, smoothing * Time.deltaTime);				
 					MainCamera.transform.rotation = rotation;
 				}if (comparar == 74) {
 					var rotation = Quaternion.Euler (90, 0, 0);
