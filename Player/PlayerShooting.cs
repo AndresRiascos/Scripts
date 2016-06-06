@@ -18,6 +18,7 @@ namespace CompleteProject
 		int shootableMask;                              // A layer mask so the raycast only hits things on the shootable layer.
 		ParticleSystem gunParticles;                    // Reference to the particle system.
 		LineRenderer gunLine;                           // Reference to the line renderer.
+		LineRenderer gunLineCenter;
 		AudioSource gunAudio;                           // Reference to the audio source.
 		Light gunLight;                                 // Reference to the light component.
 		public Light faceLight;								// Duh
@@ -33,6 +34,7 @@ namespace CompleteProject
 			// Set up the references.
 			gunParticles = GetComponent<ParticleSystem> ();
 			gunLine = GetComponent <LineRenderer> ();
+			gunLineCenter = GetComponent <LineRenderer> ();
 			gunAudio = GetComponent<AudioSource> ();
 			gunLight = GetComponent<Light> ();
 			gunLine.SetVertexCount (lengthOfLineRenderer); // aquiiiiiiiiii, asigne el numero de vertices que va a tener la linea
@@ -75,6 +77,8 @@ namespace CompleteProject
 			gunLine.enabled = false;
 			faceLight.enabled = false;
 			gunLight.enabled = false;
+			gunLineCenter.enabled = false;
+
 		}
 
 
@@ -96,6 +100,8 @@ namespace CompleteProject
 
 			// Enable the line renderer and set it's first position to be the end of the gun.
 			gunLine.enabled = true;
+			gunLineCenter.enabled = true;
+			//gunLineCenter.SetPosition(0, transform.position);
 			//gunLine.SetPosition (0, transform.position);////////// comente esto, para agregarlo en la funcion abajo, esto da el inicio de la trayectoria, quien lo iba a pensar, jeje 
 
 			// Set the shootRay so that it starts at the end of the gun and points forward from the barrel.
@@ -117,17 +123,17 @@ namespace CompleteProject
 
 				// Set the second position of the line renderer to the point the raycast hit.
 				//gunLine.SetPosition (1, shootHit.point);
+				Vector3 dir = (shootHit.point-transform.position).normalized;
 				Vector3[] points = new Vector3[lengthOfLineRenderer];// se crea un arreglo de vectores de 3 dimensiones, donde se guardara cada vertice de la linea
-				Vector2 direccion = new Vector2 (shootHit.point[0]-transform.position[0],shootHit.point[2]-transform.position[2]); // creo un vector de dos dimensiones para guardar la direccion de la bala, (punto final) - (punto inicial)
-				direccion.Normalize();// normalizo el vector 
 				float t = Time.time;
+				float tamanoDivisiones = (shootHit.point - transform.position).magnitude/lengthOfLineRenderer;
 				int i = 1;
 				points [0] = transform.position;
 				while (i < lengthOfLineRenderer) {
-					//points[i] = new Vector3((direccion[0]*0.3f*i)+(i * 0.3F)+(transform.position[0]),shootHit.point[1]+0,(transform.position[2])+(direccion[1]*0.3f*i)+(0.8f*Mathf.Sin(i + t)));// esto aca se volvio un enredo, pero la intencion es a la posicion inicial del personaje, sumarle la funcion con el seno, multiplicado por la direccion
-					points[i] = new Vector3((direccion[0]*0.3f*i)+(i * 0.3F)+(transform.position[0]),shootHit.point[1]+0,(transform.position[2])+(direccion[1]*0.3f*i)+(0.8f*Mathf.Sin(i + t)));
+					points[i] = new Vector3((i*tamanoDivisiones*dir.x)+transform.position.x,shootHit.point.y,(Mathf.Sin(i + t))+(i*tamanoDivisiones*dir.z)+transform.position.z);
 					i++;
 				}
+				//gunLineCenter.SetPosition(1, shootHit.point);
 				gunLine.SetPositions(points);// crea una linea por todos los vertices guardados en el arreglo 
 			}
 			// If the raycast didn't hit anything on the shootable layer...
