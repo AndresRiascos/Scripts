@@ -24,6 +24,9 @@ namespace CompleteProject
 
         void Update ()
         {
+			if (score>=50&& (Application.loadedLevelName!="level2")) {
+				Application.LoadLevel (1);
+			}
             // Set the displayed text to be the word "Score" followed by the score value.
             text.text = "Score: " + score;
         }
