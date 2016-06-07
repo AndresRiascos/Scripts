@@ -119,7 +119,7 @@ namespace CompleteProject
 				//PARA GENERAR DAÑO ALEATORIO
 				int danoPorBala = 30; //Inicializamos el valor de daño por cada bala en 30
 				if (Application.loadedLevelName == "level2") {  //Si se encuentra en el nivel2 el daño por bala va a ser siempre 100
-					danoPorBala = 100;  //Toma el valor de 100
+					damagePerShot = 100;  //Toma el valor de 100
 				} else { // si estamos en el nivel1 
 					//Aplicamos la función cosenos para asignar daño por bala
 					float funcionCos = Mathf.Cos (Random.Range (-Mathf.PI / 2, Mathf.PI / 2));             
