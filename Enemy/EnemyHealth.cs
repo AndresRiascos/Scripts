@@ -4,40 +4,40 @@ namespace CompleteProject
 {
     public class EnemyHealth : MonoBehaviour
     {
-        public int startingHealth = 100;            // The amount of health the enemy starts the game with.
-        public int currentHealth;                   // The current health the enemy has.
-        public float sinkSpeed = 2.5f;              // The speed at which the enemy sinks through the floor when dead.
-        public int scoreValue = 10;                 // The amount added to the player's score when the enemy dies.
-        public AudioClip deathClip;                 // The sound to play when the enemy dies.
+        public int startingHealth = 100;            // cantidad inicial de salud del enemigo
+        public int currentHealth;                   // salud actual del enemigo
+        public float sinkSpeed = 2.5f;              // la velocidad con que el enemigo desaparece a traves del suelo cuando muere.
+        public int scoreValue = 10;                 // la cantidad de puntuacion añadida al jugador cuando el enemigo muere
+        public AudioClip deathClip;                 // el sonido cuando un enemigo muere
 
 
-        Animator anim;                              // Reference to the animator.
-        AudioSource enemyAudio;                     // Reference to the audio source.
-        ParticleSystem hitParticles;                // Reference to the particle system that plays when the enemy is damaged.
-        CapsuleCollider capsuleCollider;            // Reference to the capsule collider.
-        bool isDead;                                // Whether the enemy is dead.
-        bool isSinking;                             // Whether the enemy has started sinking through the floor.
+        Animator anim;                              // referenete a la animacion
+        AudioSource enemyAudio;                     // referente a la fuente de audio.
+        ParticleSystem hitParticles;                // referencia al sistema de particulas que se produce cuando el enemigo es dañado.
+        CapsuleCollider capsuleCollider;            // referencia a la capsula de colisionador 
+        bool isDead;                                // enemigo muerto
+        bool isSinking;                             // el enemigo empieza a undirse en el suelo
 
 
         void Awake ()
         {
-            // Setting up the references.
+            // configuracion de referencias
             anim = GetComponent <Animator> ();
             enemyAudio = GetComponent <AudioSource> ();
             hitParticles = GetComponentInChildren <ParticleSystem> ();
             capsuleCollider = GetComponent <CapsuleCollider> ();
 
-            // Setting the current health when the enemy first spawns.
+            // ajuste de salud cuando los primeros enemigos nacen
             currentHealth = startingHealth;
         }
 
 
         void Update ()
         {
-            // If the enemy should be sinking...
+            // el enemigo debe undirse en el suelo...
             if(isSinking)
             {
-                // ... move the enemy down by the sinkSpeed per second.
+                // ... mover al enemigo a  sinkSpeed en el tiempo determinado.
                 transform.Translate (-Vector3.up * sinkSpeed * Time.deltaTime);
             }
         }
@@ -45,27 +45,27 @@ namespace CompleteProject
 
         public void TakeDamage (int amount, Vector3 hitPoint)
         {
-            // If the enemy is dead...
+            // si el enemigo esta muerto...
             if(isDead)
-                // ... no need to take damage so exit the function.
+                // ... no necesita hacer daños entonces sale de la funcion.
                 return;
 
-            // Play the hurt sound effect.
+            // reproducir sonido de herido.
             enemyAudio.Play ();
 
-            // Reduce the current health by the amount of damage sustained.
+            // reduce la cantidad de salud segun los daños sufridos
             currentHealth -= amount;
             
-            // Set the position of the particle system to where the hit was sustained.
+            // establecer la posicion de  particulas al que se sufrio el golpe.
             hitParticles.transform.position = hitPoint;
 
-            // And play the particles.
+            // reproducir particulas.
             hitParticles.Play();
 
-            // If the current health is less than or equal to zero...
+            // si la salud actual es menor o igual a cero...
             if(currentHealth <= 0)
             {
-                // ... the enemy is dead.
+                // ... el enemigo esta muerto
                 Death ();
             }
         }
@@ -73,16 +73,16 @@ namespace CompleteProject
 
         void Death ()
         {
-            // The enemy is dead.
+            // el enemigo esta muerto
             isDead = true;
 
-            // Turn the collider into a trigger so shots can pass through it.
+            // gire el colisionador de impacto de forma que el disparo pase a traves 
             capsuleCollider.isTrigger = true;
 
-            // Tell the animator that the enemy is dead.
+            // decir que el enemigo esta muerto
             anim.SetTrigger ("Dead");
 
-            // Change the audio clip of the audio source to the death clip and play it (this will stop the hurt clip playing).
+			// cambiar el audio por el efecto de muerto (esto detiene el efecto de herido)
             enemyAudio.clip = deathClip;
             enemyAudio.Play ();
         }
@@ -90,19 +90,19 @@ namespace CompleteProject
 
         public void StartSinking ()
         {
-            // Find and disable the Nav Mesh Agent.
+            // desactivar la malla de navegacion del agente
             GetComponent <NavMeshAgent> ().enabled = false;
 
-            // Find the rigidbody component and make it kinematic (since we use Translate to sink the enemy).
+            // encontrar el cuerpo rigido y empezar a undirlo
             GetComponent <Rigidbody> ().isKinematic = true;
 
-            // The enemy should no sink.
+            // el enemigo debe undirse
             isSinking = true;
 
-            // Increase the score by the enemy's score value.
+            // aumentar la puntuacion por el enemigo
             ScoreManager.score += scoreValue;
 
-            // After 2 seconds destory the enemy.
+            // despues de dos segundos destruir al enemigo.
             Destroy (gameObject, 2f);
         }
     }

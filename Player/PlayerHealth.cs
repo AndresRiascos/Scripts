@@ -7,74 +7,74 @@ namespace CompleteProject
 {
     public class PlayerHealth : MonoBehaviour
     {
-        public int startingHealth = 100;                            // The amount of health the player starts the game with.
-        public int currentHealth;                                   // The current health the player has.
-        public Slider healthSlider;                                 // Reference to the UI's health bar.
-        public Image damageImage;                                   // Reference to an image to flash on the screen on being hurt.
-        public AudioClip deathClip;                                 // The audio clip to play when the player dies.
-        public float flashSpeed = 5f;                               // The speed the damageImage will fade at.
-        public Color flashColour = new Color(1f, 0f, 0f, 0.1f);     // The colour the damageImage is set to, to flash.
+        public int startingHealth = 100;                            // la cantidad de salud con la que empieza el jugador
+        public int currentHealth;                                   // salud actual del jugador.
+        public Slider healthSlider;                                 // referecia a la barra de salud del jugador
+        public Image damageImage;                                   // referencia al parpadeo o flash que se da cuando es herido.
+        public AudioClip deathClip;                                 // audio cuando el jugador muere.
+        public float flashSpeed = 5f;                               // velocidad del parpadeo o flash
+        public Color flashColour = new Color(1f, 0f, 0f, 0.1f);     // color del parpadeo o flash.
 
 
-        Animator anim;                                              // Reference to the Animator component.
-        AudioSource playerAudio;                                    // Reference to the AudioSource component.
-        PlayerMovement playerMovement;                              // Reference to the player's movement.
-        PlayerShooting playerShooting;                              // Reference to the PlayerShooting script.
-        bool isDead;                                                // Whether the player is dead.
-        bool damaged;                                               // True when the player gets damaged.
+        Animator anim;                                              // referencia al componente animado.
+        AudioSource playerAudio;                                    // referente a la fuente de audio.
+        PlayerMovement playerMovement;                              // referencia a los movimientos del jugador
+        PlayerShooting playerShooting;                              // referencia a los disparos.
+        bool isDead;                                                //si el jugador esta muerto.
+        bool damaged;                                               // verdad cuando el jugador es herido
 
 
         void Awake ()
         {
-            // Setting up the references.
+            // configuracion de las referencias
             anim = GetComponent <Animator> ();
             playerAudio = GetComponent <AudioSource> ();
             playerMovement = GetComponent <PlayerMovement> ();
             playerShooting = GetComponentInChildren <PlayerShooting> ();
 
-            // Set the initial health of the player.
+            // configuracion de la salud inicial del jugador
             currentHealth = startingHealth;
         }
 
 
         void Update ()
         {
-            // If the player has just been damaged...
+            // si el jugador esta siendo herido...
             if(damaged)
             {
-                // ... set the colour of the damageImage to the flash colour.
+                // ... muestre el flash.
                 damageImage.color = flashColour;
             }
-            // Otherwise...
+            // sino..
             else
             {
-                // ... transition the colour back to clear.
+                // ... color normal.
                 damageImage.color = Color.Lerp (damageImage.color, Color.clear, flashSpeed * Time.deltaTime);
             }
 
-            // Reset the damaged flag.
+            // resetear indicador de daño.
             damaged = false;
         }
 
 
         public void TakeDamage (int amount)
         {
-            // Set the damaged flag so the screen will flash.
+            // indicador de daño entonces habra parpadeo.
             damaged = true;
 
-            // Reduce the current health by the damage amount.
+            // reduce la cantidad de salud segun las heridas
             currentHealth -= amount;
 
-            // Set the health bar's value to the current health.
+            // pone la barra de salud en la cantidad actual.
             healthSlider.value = currentHealth;
 
-            // Play the hurt sound effect.
+            // reproducir efecto de daño
             playerAudio.Play ();
 
-            // If the player has lost all it's health and the death flag hasn't been set yet...
+            // si el jugador a muerto y el indicador no coincide con que esta muerto...
             if(currentHealth <= 0 && !isDead)
             {
-                // ... it should die.
+                // ...debe morir.
                 Death ();
             }
         }
@@ -82,20 +82,20 @@ namespace CompleteProject
 
         void Death ()
         {
-            // Set the death flag so this function won't be called again.
+            // si esta muerto esta funcion no se llama de nuevo
             isDead = true;
 
-            // Turn off any remaining shooting effects.
+            // desactivar cualquier efecto de sonido.
             playerShooting.DisableEffects ();
 
-            // Tell the animator that the player is dead.
+            // mostrar que ha muerto.
             anim.SetTrigger ("Die");
 
-            // Set the audiosource to play the death clip and play it (this will stop the hurt sound from playing).
+            // reproduce el sonido de muerte y desactiva el de herida.
             playerAudio.clip = deathClip;
             playerAudio.Play ();
 
-            // Turn off the movement and shooting scripts.
+            // desactiva movimientos y disparos
             playerMovement.enabled = false;
             playerShooting.enabled = false;
         }
@@ -103,7 +103,7 @@ namespace CompleteProject
 
         public void RestartLevel ()
         {
-            // Reload the level that is currently loaded.
+            // actualiza la escena actual
             SceneManager.LoadScene (0);
         }
     }

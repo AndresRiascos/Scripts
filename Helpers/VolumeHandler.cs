@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class VolumeHandler : MonoBehaviour {
 
-	// Use this for initialization
+	// esto es para inicializar
 	void Start () 
 	{
 		if(GameObject.Find("EffectsSlider"))

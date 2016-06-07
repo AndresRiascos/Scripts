@@ -5,21 +5,21 @@ namespace CompleteProject
 {
     public class EnemyAttack : MonoBehaviour
     {
-        public float timeBetweenAttacks = 0.5f;     // The time in seconds between each attack.
-        public int attackDamage = 10;               // The amount of health taken away per attack.
+        public float timeBetweenAttacks = 0.5f;     // segundos que pasan entre cada ataque.
+        public int attackDamage = 10;               // cantidad de salud que quita el ataque.
 
 
-        Animator anim;                              // Reference to the animator component.
-        GameObject player;                          // Reference to the player GameObject.
-        PlayerHealth playerHealth;                  // Reference to the player's health.
-        EnemyHealth enemyHealth;                    // Reference to this enemy's health.
-        bool playerInRange;                         // Whether player is within the trigger collider and can be attacked.
-        float timer;                                // Timer for counting up to the next attack.
+        Animator anim;                              // componente animado
+        GameObject player;                          // jugador o sea objetivo
+        PlayerHealth playerHealth;                  // salud del jugador.
+        EnemyHealth enemyHealth;                    // salud del enemigo.
+        bool playerInRange;                         // el jugador esta dentro de rango de disparo
+        float timer;                                // tiempo que pasa para el siguiente ataque .
 
 
         void Awake ()
         {
-            // Setting up the references.
+            // configuracion de las referencias.
             player = GameObject.FindGameObjectWithTag ("Player");
             playerHealth = player.GetComponent <PlayerHealth> ();
             enemyHealth = GetComponent<EnemyHealth>();
@@ -29,10 +29,10 @@ namespace CompleteProject
 
         void OnTriggerEnter (Collider other)
         {
-            // If the entering collider is the player...
+            // si el jugador esta en el rango de disparo...
             if(other.gameObject == player)
             {
-                // ... the player is in range.
+                // ... jugador si esta en el rango.
                 playerInRange = true;
             }
         }
@@ -40,10 +40,10 @@ namespace CompleteProject
 
         void OnTriggerExit (Collider other)
         {
-            // If the exiting collider is the player...
+            // si el jugador esta fuera del rango de disparo...
             if(other.gameObject == player)
             {
-                // ... the player is no longer in range.
+                // ... jugador no esta en el rango
                 playerInRange = false;
             }
         }
@@ -51,20 +51,20 @@ namespace CompleteProject
 
         void Update ()
         {
-            // Add the time since Update was last called to the timer.
+            // temporizador
             timer += Time.deltaTime;
 
-            // If the timer exceeds the time between attacks, the player is in range and this enemy is alive...
+            // si el temporizador supera los tiempos entre ataques, el jugador esta en el rango de disparo y el enemigo esta vivo
             if(timer >= timeBetweenAttacks && playerInRange && enemyHealth.currentHealth > 0)
             {
-                // ... attack.
+                // ... ataque.
                 Attack ();
             }
 
-            // If the player has zero or less health...
+            // si el jugador tiene salud cero o menos...
             if(playerHealth.currentHealth <= 0)
             {
-                // ... tell the animator the player is dead.
+                // ... mostrar "jugador muerto".
                 anim.SetTrigger ("PlayerDead");
             }
         }
@@ -72,13 +72,13 @@ namespace CompleteProject
 
         void Attack ()
         {
-            // Reset the timer.
+            // reinicie tiempos.
             timer = 0f;
 
-            // If the player has health to lose...
+            // si el jugador tiene salus por perder...
             if(playerHealth.currentHealth > 0)
             {
-                // ... damage the player.
+                // ... dañar al jugador
                 playerHealth.TakeDamage (attackDamage);
             }
         }

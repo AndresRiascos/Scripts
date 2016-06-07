@@ -6,25 +6,25 @@ namespace CompleteProject
 {
     public class ScoreManager : MonoBehaviour
     {
-        public static int score;        // The player's score.
+        public static int score;        // puntuacion del jugador.
 
 
-        Text text;                      // Reference to the Text component.
+        Text text;                      // referencia al componente de texto.
 
 
         void Awake ()
         {
-            // Set up the reference.
+            // configuracion de referencias
             text = GetComponent <Text> ();
 
-            // Reset the score.
+            // reinciar puntuacion 
             score = 0;
         }
 
 
         void Update ()
         {
-            // Set the displayed text to be the word "Score" followed by the score value.
+            // mostrar en panatalla la palbra "score" seguido del la puntuacion.
             text.text = "Score: " + score;
         }
     }

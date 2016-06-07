@@ -5,25 +5,25 @@ namespace CompleteProject
 {
     public class PlayerMovement : MonoBehaviour
     {
-        public float speed = 6f;            // la velocidad en la que el jugador se movera
+        public float speed = 6f;            // velocidad en que puede moverse el jugador
 
 
-        Vector3 movement;                   // The vector to store the direction of the player's movement.
-        Animator anim;                      // Reference to the animator component.
-        Rigidbody playerRigidbody;          // Reference to the player's rigidbody.
+        Vector3 movement;                   // vector para almacenar los movimientos del jugador
+        Animator anim;                      // referente al componente animado
+        Rigidbody playerRigidbody;          // referencia al cuerpo rigido o muerto
 #if !MOBILE_INPUT
-        int floorMask;                      // A layer mask so that a ray can be cast just at gameobjects on the floor layer.
-        float camRayLength = 100f;          // The length of the ray from the camera into the scene.
+        int floorMask;                      // mascara del suelo
+        float camRayLength = 100f;          // longitud del rayo de la camara en la escena 
 #endif
 
         void Awake ()
         {
 #if !MOBILE_INPUT
-            // Create a layer mask for the floor layer.
+            // crear una mascara para la capa baja "suelo".
             floorMask = LayerMask.GetMask ("Floor");
 #endif
 
-            // Set up references.
+            // configuracion de referencias
             anim = GetComponent <Animator> ();
             playerRigidbody = GetComponent <Rigidbody> ();
         }
@@ -31,30 +31,31 @@ namespace CompleteProject
 
         void FixedUpdate ()
         {
-            // Store the input axes.
+            // almacenar los ejes de entrada
             float h = CrossPlatformInputManager.GetAxisRaw("Horizontal");
             float v = CrossPlatformInputManager.GetAxisRaw("Vertical");
 
-            // Move the player around the scene.
+            // movimiento del jugador alrededor de la escena
+
             Move (h, v);
 
-            // Turn the player to face the mouse cursor.
+            // girar al jugador con los movimientos del cursor
             Turning ();
 
-            // Animate the player.
+            // animacion del jugador
             Animating (h, v);
         }
 
 
         void Move (float h, float v)
         {
-            // Set the movement vector based on the axis input.
+            // establecer el vector de movimiento segun en eje de entrada
             movement.Set (h, 0f, v);
             
-            // Normalise the movement vector and make it proportional to the speed per second.
+            // normalizar el vector de movimiento proporcional a la velocidad.
             movement = movement.normalized * speed * Time.deltaTime;
 
-            // Move the player to it's current position plus the movement.
+            // mover al jugador a su posicion actual mas su movimiento.
             playerRigidbody.MovePosition (transform.position + movement);
         }
 
@@ -62,25 +63,25 @@ namespace CompleteProject
         void Turning ()
         {
 #if !MOBILE_INPUT
-            // Create a ray from the mouse cursor on screen in the direction of the camera.
+            // crear un rayo en la posicion del mouse en el rango de la pantalla
             Ray camRay = Camera.main.ScreenPointToRay (Input.mousePosition);
 
-            // Create a RaycastHit variable to store information about what was hit by the ray.
+            // crear un Raycashit para almacenar lo que alcanza el rayo
             RaycastHit floorHit;
 
-            // Perform the raycast and if it hits something on the floor layer...
+            // ejecutar el Raycast si golpea algo del suelo.
             if(Physics.Raycast (camRay, out floorHit, camRayLength, floorMask))
             {
-                // Create a vector from the player to the point on the floor the raycast from the mouse hit.
+                // crear un vector para el mouse del suelo y la posicion
                 Vector3 playerToMouse = floorHit.point - transform.position;
 
-                // Ensure the vector is entirely along the floor plane.
+                // asegurar que el vector cubre la totalidad del suelo
                 playerToMouse.y = 0f;
 
-                // Create a quaternion (rotation) based on looking down the vector from the player to the mouse.
+                // crea un Quaternion para la rotacion hecha por el mouse.
                 Quaternion newRotatation = Quaternion.LookRotation (playerToMouse);
 
-                // Set the player's rotation to this new rotation.
+                // rotar al jugador hecha el nuevo giro.
                 playerRigidbody.MoveRotation (newRotatation);
             }
 #else
@@ -107,10 +108,10 @@ namespace CompleteProject
 
         void Animating (float h, float v)
         {
-            // Create a boolean that is true if either of the input axes is non-zero.
+            // el booleano es verdad si los ejes son distintos de cero
             bool walking = h != 0f || v != 0f;
 
-            // Tell the animator whether or not the player is walking.
+            // decir que el jugador esta caminando.
             anim.SetBool ("IsWalking", walking);
         }
     }
