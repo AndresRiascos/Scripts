@@ -26,12 +26,7 @@ namespace CompleteProject
             // si el enemigo y jugador tiene salud mayor a cero...
             if(enemyHealth.currentHealth > 0 && playerHealth.currentHealth > 0)
             {
-<<<<<<< HEAD
-                // ... establece el destino del enemigo a traves de la malla hasta el jugador.
-				Vector3 pos = new Vector3(0,0,0);
-=======
-                // ... set the destination of the nav mesh agent to the player.
->>>>>>> origin/master
+
                 nav.SetDestination (player.position);
             }
             // otra manera..

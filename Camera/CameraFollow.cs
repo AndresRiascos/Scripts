@@ -5,14 +5,6 @@ namespace CompleteProject
 {
     public class CameraFollow : MonoBehaviour
     {
-<<<<<<< HEAD
-        public Transform target;            // la posicion que la camara estara siguiendo.
-        public float smoothing = 5f;        // la velocidad con que cada camara va a seguir.
-		public float zoomZ = 0.002f;
-
-
-        Vector3 offset;                     // el desplazamiento inicial del objetivo.
-=======
         public Transform target;            // The position that that camera will be following.
         public float smoothing = 5f;        // The speed with which the camera will be following.
 		//Variables Necesarias para cambiar el tipo de vista
@@ -28,12 +20,11 @@ namespace CompleteProject
 		public GameObject CamOrthographic;  //Defiminos el tipo de Objeto de juego de la cámara en ortográfica
 		//Fin variables necesarias para cambiar el tipo de cámara
         Vector3 offset;                     // The initial offset from the target.
->>>>>>> origin/master
 
 
         void Start ()
         {
-            // se calcula el desplazamiento inicial.
+            // Calculate the initial offset.
             offset = transform.position - target.position;
 			//Inicializamos los componentes al iniciar o ejecutar el juego
 			CamPerspective = GameObject.Find("MainCamera");  //Traemos la Cámara del ambiente
@@ -64,65 +55,6 @@ namespace CompleteProject
 					MainCamera.enabled = true;  //activamos la cámara en vista de perspectiva
 					Camera2.enabled = false;   //desactivamos la cámara en vista de ortográfica
 				}
-<<<<<<< HEAD
-			}if (( Input.GetKeyDown(KeyCode.KeypadPlus)) && (MainCamera.enabled == true)){
-				Debug.Log ("Angulo: " + MainCamera.transform.localEulerAngles.x);
-				Debug.Log ("Posición que debería tomar: " + MainCamera.transform.localPosition);
-				int comparar = (int)MainCamera.transform.localEulerAngles.x;
-				if(comparar == 30){
-					var rotation = Quaternion.Euler(45, 0, 0);
-					Vector3 temp = MainCamera.transform.position;
-					temp.z = -14f;
-					MainCamera.transform.position = temp;
-					MainCamera.transform.rotation = rotation;
-				}if(comparar == 45){
-					var rotation = Quaternion.Euler(60, 0, 0);
-					MainCamera.transform.rotation = rotation;
-				}if(comparar == 60){
-					var rotation = Quaternion.Euler(75, 0, 0);
-					Vector3 targetCamPos = target.position + offset;
-					Vector3 temp = transform.position;
-					temp.z = -8f;
-					transform.position = temp;
-					// Smoothly interpolate between the camera's current position and it's target position.
-					transform.position = Vector3.Lerp (transform.position, targetCamPos, smoothing * Time.deltaTime);				
-					MainCamera.transform.rotation = rotation;
-				}if (comparar == 74) {
-					var rotation = Quaternion.Euler (90, 0, 0);
-					MainCamera.transform.rotation = rotation;
-				}if (comparar == 90) {
-					MainCamera.transform.rotation = MainCamera.transform.rotation;
-				}
-
-<<<<<<< HEAD
-			// la rueda del mouse se mueve hacia adelante
-			if(Input.GetAxis("Mouse ScrollWheel") > 0)
-			{
-				Vector3 Zoom = new Vector3 (0, 10,0);//para hacer el zoom
-				//target.localScale += Zoom; //con esto escalo solamente el muñeco pero no el ambiente
-				Vector3 targetCamPos = target.position + offset ;
-				// cambia la posicion actual de la camara a su destino.
-				//Vector3 temp = transform.localPosition;
-				//temp.x += 0.1f;
-				//temp.y += 10f;
-				//temp.z += 0.1f;
-				//transform.localPosition = temp;
-				Camera.main.fieldOfView = Camera.main.fieldOfView - 5;
-				transform.position = Vector3.Lerp (transform.position , targetCamPos , smoothing * Time.deltaTime);
-			}
-
-			// la rueda del raton se mueve hacia atras
-			if (Input.GetAxis ("Mouse ScrollWheel") < 0) {
-				Vector3 targetCamPos = target.position + offset;
-				//cambio de la posicion actual de la camara hacia el objeto
-				Camera.main.fieldOfView = Camera.main.fieldOfView + 5;
-				transform.position = Vector3.Lerp (transform.position, targetCamPos, smoothing * Time.deltaTime);
-			} else {
-				// crea un posicion de la camara basado en el desplazamiento del objetivo
-=======
-				//Debug.Log (MainCamera.transform.localRotation);
-=======
->>>>>>> origin/master
 			}
 			// Si el scroll del mouse es mayor a cero, y El actual Zoom de la cámara es mayor al zoom mínimo, y el estado de la cámara de perspectiva es true
 			if((Input.GetAxis("Mouse ScrollWheel") > 0) && (MainCamera.fieldOfView > zoomMinPerspective) && (MainCamera.enabled == true)){
@@ -143,9 +75,8 @@ namespace CompleteProject
 			//Sino cumple lo anterior, ejecute el movimiento del personaje
 			else{
 				// Create a postion the camera is aiming for based on the offset from the target.
->>>>>>> origin/master
 				Vector3 targetCamPos = target.position + offset;
-				// cambio de la posicion actual de la camara hacia el objeto.
+				// Smoothly interpolate between the camera's current position and it's target position.
 				transform.position = Vector3.Lerp (transform.position, targetCamPos, smoothing * Time.deltaTime);
 			}
         }
